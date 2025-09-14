@@ -1,2 +1,4 @@
-# powder_2_tricks
-Polynomial Optimization Without DERivative: 2 tricks
+# cubic_max
+
+Нахождение локального максимума многочленов без взятия производных.
+
