@@ -159,7 +159,7 @@ The goal of this note is to explain how to find local extrema of polynomials wit
 The first part presents the method of Gleb Veselsky, invented by him at summer camp in August 2024.
 Gleb's method is based on selecting additional factors for the arithmetic-geometric mean inequality.
 The method works for polynomials of any degree, factored into linear factors.
-The second part presents the method of Johann Hudde, mayor of Amsterdam in the 17th century. 
+The second part presents the method of Johannes Hudde, mayor of Amsterdam in the 17th century. 
 Hudde's method is based on identifying multiple roots by multiplying polynomial coefficients by an arithmetic progression.
 
 
@@ -299,9 +299,9 @@ The point $t=1/2$ or $x = 1.5$ is a local minimum, and $t = -1/2$ or $x = 0.5$ i
 TODO: add picture
 
 
-\section{Johann Hudde's method with arithmetic progressions}
+\section{Johannes Hudde's method with arithmetic progressions}
 
-Johann Hudde lived in the 17th century, was a mathematician, mayor of Amsterdam, and invented a method for finding local extrema without derivatives. 
+Johannes Hudde lived in the 17th century, was a mathematician, mayor of Amsterdam, and invented a method for finding local extrema without derivatives. 
 
 Again, let's start with a simple problem!
 
@@ -321,7 +321,7 @@ TODO: add picture
 
 However, the extremum is not necessarily equal to zero. 
 It can equal some number $m$.
-Therefore, Johann Hudde declared a hunt for multiple roots of the equation $f(x) = m$.
+Therefore, Johannes Hudde declared a hunt for multiple roots of the equation $f(x) = m$.
 
 
 \subsection*{Hunt for multiple roots}
@@ -333,7 +333,7 @@ Let's start with the parabola $p(x) = (x - 1)^2 = x^2 - 2x + 1$.
 Of course, the multiple root of this parabola is $x = 1$.
 
 
-I don't know how Johann Hudde came to his idea. 
+I don't know how Johannes Hudde came to his idea. 
 Probably it was long hours of fruitless searching, and then sudden discovery. 
 What follows is only my attempt to reconstruct his reasoning. 
 
@@ -354,7 +354,7 @@ They form an arithmetic progression!
 
 Perhaps this is exactly how the theorem was discovered.
 
-Theorem (Johann Hudde):
+Theorem (Johannes Hudde):
 If the coefficients of the original polynomial are multiplied by any arithmetic progression,
 then the roots of the new polynomial will necessarily include all multiple roots of the original.
 
@@ -381,7 +381,7 @@ The reader familiar with derivatives may notice that multiplication by the arith
 \yan(p(x)) = -3x^3 + 2x^2 + 2x + 0 = x \cdot (-3x^2 + 2x + 2) = x \cdot p'(x).
 \]
 
-The power of Johann Hudde's method is that we can choose the arithmetic progression ourselves. 
+The power of Johannes Hudde's method is that we can choose the arithmetic progression ourselves. 
 And we can specifically put zero in the progression where there is an unpleasant coefficient in the original polynomial.
 More details about the method can be read in the wonderful article by Jeff Uzuki \cite{uzuki2005lost}.
 
@@ -434,7 +434,7 @@ Hence, $t = 1/2$ and $t = -1/2$.
 Therefore, $x = 1.5$ and $x = 0.5$.
 
 
-\subsection*{Proof of Johann Hudde's theorem}
+\subsection*{Proof of Johannes Hudde's theorem}
 
 First, let's see how the operation $\yan()$ of multiplying polynomial coefficients by an arithmetic progression 
 acts on the simplest polynomials with multiple root $x_0$:
