@@ -1,0 +1,467 @@
+% arara: xelatex
+\documentclass[12pt]{article}
+
+% \usepackage{physics}
+
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=cyan,
+    pdftitle={Overleaf Example},
+    pdfpagemode=FullScreen,
+    }
+
+\usepackage{verse}
+
+\usepackage{tikzducks}
+
+\usepackage{tikz} % graphics in tikz
+\usetikzlibrary{shapes, arrows, positioning}
+\usepackage{microtype} % punctuation hanging
+
+\usepackage{array} % for fixed-width columns
+
+\usepackage{indentfirst} % indent in first paragraph
+
+\usepackage{sectsty} % for centering section titles
+\allsectionsfont{\centering}
+
+\usepackage{amsmath, amsfonts, amssymb} % standard math packages
+
+\usepackage{comment}
+
+\usepackage[top=2cm, left=1.2cm, right=1.2cm, bottom=2cm]{geometry} % page text size
+
+\usepackage{lastpage} % to find the last page number
+
+\usepackage{enumitem} % additional list features
+%  for example \begin{enumerate}[resume] allows continuing numbering in a new list
+\usepackage{caption}
+
+\usepackage{url} % to use \url{link to web}
+
+
+
+\newcommand{\smallduck}{\begin{tikzpicture}[scale=0.3]
+    \duck[
+        cape=black,
+        hat=black,
+        mask=black
+    ]
+    \end{tikzpicture}}
+
+\usepackage{fancyhdr} % fancy headers and footers
+\pagestyle{fancy}
+\lhead{}
+\chead{Local extremum without derivatives}
+\rhead{}
+\lfoot{}
+\cfoot{}
+\rfoot{}
+
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+\usepackage{tcolorbox} % boxes!
+
+\usepackage{todonotes} % for inserting notes about what remains to be done
+% \todo{Here coefficients need to be fixed}
+% \missingfigure{Here will be The Last Day of Pompeii}
+% \listoftodos - prints all \todo notes
+
+
+% prettier tables
+\usepackage{booktabs}
+% commandments from documentation:
+% 1. Don't use vertical lines
+% 2. Don't use double lines
+% 3. Units of measurement - in table header
+% 4. Don't abbreviate .1 instead of 0.1
+% 5. Repeat recurring values, don't say "same"
+
+
+\setcounter{MaxMatrixCols}{20}
+% by crazy default pmatrix supports only 10 cols :)
+
+
+\usepackage{fontspec}
+\usepackage{libertine}
+\usepackage{polyglossia}
+
+
+\usepackage[bibencoding=auto, backend=biber, sorting=none, style=alphabetic]{biblatex}
+\addbibresource{poly_opt_tricks.bib}
+
+
+\setmainlanguage{english}
+\setotherlanguages{russian}
+
+% download "Linux Libertine" fonts:
+% http://www.linuxlibertine.org/index.php?id=91&L=1
+% \setmainfont{Linux Libertine O} % or Helvetica, Arial, Cambria
+% why do we need \newfontfamily:
+% http://tex.stackexchange.com/questions/91507/
+% \newfontfamily{\cyrillicfonttt}{Linux Libertine O}
+
+%% econometric abbreviations
+\DeclareMathOperator{\Cov}{\mathbb{C}ov}
+\DeclareMathOperator{\Corr}{\mathbb{C}orr}
+\DeclareMathOperator{\Var}{\mathbb{V}ar}
+\DeclareMathOperator{\col}{col}
+\DeclareMathOperator{\row}{row}
+
+\let\P\relax
+\DeclareMathOperator{\P}{\mathbb{P}}
+
+\DeclareMathOperator{\E}{\mathbb{E}}
+% \DeclareMathOperator{\tr}{trace}
+\DeclareMathOperator{\card}{card}
+\DeclareMathOperator{\mgf}{mgf}
+
+\DeclareMathOperator{\Convex}{Convex}
+\DeclareMathOperator{\plim}{plim}
+
+\DeclareMathOperator{\yan}{yan}
+
+\usepackage{mathtools}
+\DeclarePairedDelimiter{\norm}{\lVert}{\rVert}
+\DeclarePairedDelimiter{\abs}{\lvert}{\rvert}
+\DeclarePairedDelimiter{\scalp}{\langle}{\rangle}
+\DeclarePairedDelimiter{\ceil}{\lceil}{\rceil}
+
+\newcommand{\cN}{\mathcal{N}}
+\newcommand{\cF}{\mathcal{F}}
+
+\newcommand{\RR}{\mathbb{R}}
+\newcommand{\NN}{\mathbb{N}}
+\newcommand{\hb}{\hat{\beta}}
+\newcommand{\dPois}{\mathrm{Pois}}
+
+
+
+
+
+\begin{document}
+
+
+\begin{verse}
+    \begin{flushright}
+        — What do we know about the fox? \\
+        — Nothing. And not even all of that. \\
+
+        Boris Zakhoder
+    \end{flushright}
+\end{verse}
+
+The goal of this note is to explain how to find local extrema of polynomials without derivatives.
+The first part presents the method of Gleb Veselsky, invented by him at summer camp in August 2024.
+Gleb's method is based on selecting additional factors for the arithmetic-geometric mean inequality.
+The method works for polynomials of any degree, factored into linear factors.
+The second part presents the method of Johannes Hudde, mayor of Amsterdam in the 17th century. 
+Hudde's method is based on identifying multiple roots by multiplying polynomial coefficients by an arithmetic progression.
+
+
+\section{Method of means for finding extrema}
+
+\begin{tcolorbox}[colback=yellow!50!red!25!white]
+The arithmetic mean of positive numbers is greater than or equal to the geometric mean,
+\[
+\frac{x_1 + x_2 + \dots + x_n}{n} \geq (x_1 x_2 \dots x_n)^{1/n}.
+\]
+Equality is achieved if and only if
+\[
+x_1 = x_2 = \dots = x_n.
+\]
+\end{tcolorbox}
+
+\subsection*{Simple example}
+
+Find the local maximum of the function $f(x) = x^2 \cdot (6 - 2x)$.
+
+
+Solution. Note that $x + x + (6 - 2x) = 6$.
+Therefore, we know the arithmetic mean,
+\[
+\frac{x + x + (6- 2x)}{3} = 2.
+\]
+By the inequality of means,
+\[
+\frac{x + x + (6- 2x)}{3} \geq (x\cdot x \cdot (6 - 2x))^{1/3}.
+\]
+Hence, if $x > 0$ and $6 - 2x>0$, 
+\[
+2^3 \geq x^2 \cdot (6 - 2x).
+\]
+The maximum value is achieved when $x = 6 - 2x$, that is when $x=2$.
+
+
+TODO: add picture
+
+
+\subsection*{More complex example}
+
+
+Find the local maximum of the function $f(x) = x (x + 1) (2 - x)$.
+
+
+Houston, we have problems with the old solution!
+In the previous solution we were lucky twice.
+First, in the simple problem the sum of factors happened to be constant.
+Second, in the simple problem simultaneous equality of all factors was possible. 
+In the new problem neither is the sum equal to a constant, $x + (x + 1) + (2 - x) = 3 +x$, nor is simultaneous equality $x = x+1 = 2-x$ possible.
+
+However, the optimum point will not change if we multiply one factor by $a > 0$ and another by $b > 0$.
+By choosing $a$ and $b$ we can restore the double luck!
+
+Let's find the maximum of the function $h(x) = ax \cdot b(x + 1) (2 - x)$.
+
+We require a constant sum and equality of factors!
+\[
+\begin{cases}
+    a + b - 1 = 0 \\
+    ax = 2 - x \\
+    b(x + 1) = 2 - x.
+\end{cases}
+\]
+
+The quantities $a$ and $b$ play an auxiliary role, let's eliminate them, $a = (2 - x)/x$, $b = (2 - x)/(x + 1)$!
+We get one equation 
+\[
+\frac{2 - x}{x} + \frac{2 - x}{x + 1} - 1 = 0.
+\]
+
+Multiply by the denominators,
+\[
+(2 - x)(x + 1) + (2 - x) x - x (x + 1) = 0.
+\]
+
+The reader familiar with derivatives may notice that we obtained the derivative!
+\[
+f'(x) = (2 - x)(x + 1) + (2 - x) x - x (x + 1).
+\]
+
+It remains only to solve the quadratic equation,
+\[
+(2 - x)(x + 1) + (2 - x) x - x (x + 1) = 0.
+\]
+
+We get $x_1 = (1 - \sqrt{7}) / 3$, $x_2 = (1 + \sqrt{7}) / 3$ — points suspicious of being extrema.
+
+
+Similarly, one can find local extrema of any polynomial factored into factors. 
+To find the extremum of an arbitrary polynomial of degree $n$, $n - 1$ additional factors are needed. 
+And special cases with luck can be solved faster. 
+
+TODO: add picture
+
+
+\subsection*{Lucky example}
+
+Find the local maximum of the function $f(x) = x^{10} (5 - x)$.
+
+Multiply the function by $10$ to make the sum of factors constant.
+\[
+h(x) = x^{10}(50 - 10x).
+\]
+
+Using the inequality of means, valid when $x > 0$ and $50 - 10x > 0$,
+\[
+\frac{x + x + \dots + x + (50 - 10x)}{11} \geq (x \cdot x \cdot \dots \cdot x \cdot (50 - 10x) )^{1/11}.
+\]
+Hence, when $x > 0$ and $50 - 10x > 0$,
+\[
+h(x) \leq (50/11)^{11}.
+\]
+The maximum is achieved when $x = x = \dots = x = 50 - 10x$, that is $x = 50/11$.
+
+TODO: add picture
+
+\subsection*{Another example}
+
+Let's find the extrema of the function 
+\[
+f(x) = 4x + 3 + \frac{1}{x - 1}.
+\]
+For convenience, replace $x - 1$ with $t$,
+\[
+g(t) = 4(t + 1) + 3 + \frac{1}{t} = 7 + 4t + \frac{1}{t}.
+\]
+By the inequality of means, we find the local minimum,
+\[
+\frac{4t + 1/t}{2} \geq \sqrt{4t \cdot 1/t} = 2.
+\]
+Equality is achieved when $4t = 1/t$, that is when $t = 1/2$ and $t = -1/2$.
+The point $t=1/2$ or $x = 1.5$ is a local minimum, and $t = -1/2$ or $x = 0.5$ is a local maximum.
+
+
+TODO: add picture
+
+
+\section{Johannes Hudde's method with arithmetic progressions}
+
+Johannes Hudde lived in the 17th century, was a mathematician, mayor of Amsterdam, and invented a method for finding local extrema without derivatives. 
+
+Again, let's start with a simple problem!
+
+Find at least one local extremum of the function
+\[
+f(x)  = (x - 2)^2 (x - 5) (x - 7)^4.
+\]
+
+At the point $x=5$ there is no extremum, since when the variable $x$ passes through $5$, the function changes sign. 
+But at points $x = 2$ and $x = 7$ there are local minima. 
+At these points the function equals zero, and to the right and left of these points the function is positive. 
+The function achieves its local minimum $f_{\text{min}} = 0$ at points of multiple factors!
+
+
+TODO: add picture
+
+
+However, the extremum is not necessarily equal to zero. 
+It can equal some number $m$.
+Therefore, Johannes Hudde declared a hunt for multiple roots of the equation $f(x) = m$.
+
+
+\subsection*{Hunt for multiple roots}
+
+Let's devise an operation that would simplify the polynomial $p(x) = f(x) - m$, 
+but at the same time any multiple root of the polynomial $p(x)$ would remain a root of our new invented polynomial.
+
+Let's start with the parabola $p(x) = (x - 1)^2 = x^2 - 2x + 1$. 
+Of course, the multiple root of this parabola is $x = 1$.
+
+
+I don't know how Johannes Hudde came to his idea. 
+Probably it was long hours of fruitless searching, and then sudden discovery. 
+What follows is only my attempt to reconstruct his reasoning. 
+
+We need to build a new polynomial $q(x)$ based on the old $p(x) = x^2 - 2x + 1$.
+So let's multiply the coefficients of the old one by arbitrary constants, $q(x) = ax^2 - 2bx + c$. 
+Hmm, but with this operation we can, of course, lose the multiple root! 
+So let's bring the multiple root back! 
+For this, the number $c$ cannot be arbitrary, it must be chosen so that the multiple root doesn't die. 
+In our toy example we know that the multiple root equals $x = 1$.
+Therefore the new polynomial must have the form $q(x) = a(x - 1)^2 - 2b (x - 1)$.
+
+Expand the brackets!
+\[
+    q(x) = a(x - 1)^2 - 2b (x - 1) = ax^2 - 2(a + b) x + (a + 2b).
+\]
+Look carefully at the coefficients: $a$, $a + b$, $a + 2b$!
+They form an arithmetic progression!
+
+Perhaps this is exactly how the theorem was discovered.
+
+Theorem (Johannes Hudde):
+If the coefficients of the original polynomial are multiplied by any arithmetic progression,
+then the roots of the new polynomial will necessarily include all multiple roots of the original.
+
+We have, of course, proved it only for a quadratic polynomial with root $x=1$, but let's believe that it's true for any polynomial, and apply it in practice!
+
+Find the local maximum of the function $f(x) = x (x + 1) (2 - x)$.
+
+Expand the brackets, $f(x) = -x^3 + x^2 + 2x$.
+
+We don't know what the extremum equals, so we'll look for multiple roots of the polynomial 
+\[
+p(x) = -x^3 + x^2 + 2x - m.
+\]
+Multiply the coefficients of this polynomial by the progression $(3, 2, 1, 0)$, to get rid of the unknown $m$,
+\[
+\yan(p(x)) = -3x^3 + 2x^2 + 2x + 0.
+\]
+Solve the equation, $-3x^3 + 2x^2 + 2x + 0 = 0$, we get roots $x_1 = 0$,  $x_2 = (1 - \sqrt{7}) / 3$, $x_3 = (1 + \sqrt{7}) / 3$.
+
+Root $x = 0$ is possible only when $m = 0$, with $p(x) = x\cdot (-x^2 + x + 2)$ and root $x = 0$ is not multiple. 
+
+The reader familiar with derivatives may notice that multiplication by the arithmetic progression $\dots, 3, 2, 1, 0$ and canceling the factor $x$ is completely equivalent to taking the derivative. 
+\[
+\yan(p(x)) = -3x^3 + 2x^2 + 2x + 0 = x \cdot (-3x^2 + 2x + 2) = x \cdot p'(x).
+\]
+
+The power of Johannes Hudde's method is that we can choose the arithmetic progression ourselves. 
+And we can specifically put zero in the progression where there is an unpleasant coefficient in the original polynomial.
+More details about the method can be read in the wonderful article by Jeff Uzuki \cite{uzuki2005lost}.
+
+\subsection*{Finding a tangent}
+
+Find the tangent to the graph $x^3$ at the point $x = 2$.
+
+We want root $x = 2$ to be a multiple root of the equation $x^3 = kx + b$.
+
+Move everything to the left side 
+\[
+p(x)  = x^3 + 0x^2 - kx - b = 0.
+\]
+Multiply by two different progressions, $(2, 1, 0, -1)$ and $(3, 2, 1, 0)$.
+The first progression will rid us of parameter $k$, and the second of $b$.
+By the way, multiplication by progression $(0, 1, 2, 3)$ would rid us of high powers.
+\[
+\begin{cases}
+    2x^3 + b = 0 \\
+    3x^3 - kx = 0 \\
+\end{cases}
+\]
+We want the multiple root to be $x = 2$.
+From the system we find $b = - 16$, $k = 12$.
+
+
+\subsection*{Another example}
+
+Let's find the extrema of the function 
+\[
+f(x) = 4x + 3 + \frac{1}{x - 1}.
+\]
+For convenience, replace $x - 1$ with $t$,
+\[
+g(t) = 4(t + 1) + 3 + \frac{1}{t} = 4t + 7 + \frac{1}{t}.
+\]
+Set this function equal to the still unknown extremum value $m$,
+\[
+4t + 7 + \frac{1}{t} = m.
+\]
+Multiply by $t$, 
+\[
+4t^2 + (7 - m) t + 1 = 0.
+\]
+This equation should have a multiple root, multiply coefficients by progression $(1, 0, -1)$,
+\[
+4t^2 - 1 = 0.
+\]
+Hence, $t = 1/2$ and $t = -1/2$.
+Therefore, $x = 1.5$ and $x = 0.5$.
+
+
+\subsection*{Proof of Johannes Hudde's theorem}
+
+First, let's see how the operation $\yan()$ of multiplying polynomial coefficients by an arithmetic progression 
+acts on the simplest polynomials with multiple root $x_0$:
+\[
+\yan(x^n(x - x_0)^2) = \yan(x^{n+2} - 2x^{n+1} x_0 + x^n x_0^2) = ax^{n+2} - 2(a + b)x^{n+1} x_0 + (a+2b)x^n x_0^2
+\]
+We substitute the multiple root $x = x_0$ of the original polynomial into the transformed polynomial and notice that we get zero. 
+
+Second, multiplying polynomial coefficients by an arithmetic progression, $\yan()$, is a linear operation:
+\[
+\yan(a(x) + b(x)) = \yan(a(x)) + \yan(b(x)).
+\]
+Third, any polynomial with multiple root $x_0$ can be written as
+\[
+p(x) = a_n x^n (x - x_0)^2 + a_{n-1} x^{n-1}(x - x_0)^2 + \dots + a_0 (x - x_0)^2.
+\]
+Apply operation $\yan()$ to the left and right sides. 
+By linearity we apply $\yan()$ to each term.
+One factor $(x - x_0)$ survives in each term, and therefore in the entire sum the root that was multiple in the original polynomial survives.
+
+
+\section*{Sources of wisdom}
+\addcontentsline{toc}{section}{Sources of wisdom}
+\printbibliography[heading=none]
+
+
+
+
+
+\end{document}
