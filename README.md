@@ -1,34 +1,47 @@
-# POWDER: 2 Tricks for Polynomial Optimization Without Derivatives
+# Polynomial Optimization Without Derivatives
 
-This repository contains academic documents describing two efficient methods for optimizing polynomial functions without using derivatives.
+This repository contains academic documents describing methods for finding local extrema of polynomials without computing derivatives.
 
 ## Contents
 
-- `powder_2_tricks_ru.tex` - Russian version of the paper
-- `powder_2_tricks_en.tex` - English translation of the paper
+- `polynomial_optimization_wo_derivatives_ru.tex` - Original Russian document (available on main branch)
+- `polynomial_optimization_wo_derivatives_ru.pdf` - Compiled Russian PDF (available on main branch)  
+- `powder_2_tricks_en.tex` - English translation
 
 ## Methods Described
 
-### Trick 1: Golden Section Method for Polynomials
-Adapts the classical golden section method for polynomial functions, utilizing the unimodality property and ensuring linear convergence O(φ^-n).
+### Method 1: Method of Means for Finding Extrema
+Invented by Gleb Veselsky in August 2024, this method uses the arithmetic-geometric mean inequality by selecting additional factors. Works for polynomials of any degree factored into linear factors.
 
-### Trick 2: Polynomial Interpolation with Adaptive Node Selection
-Uses strategic interpolation with lower-degree polynomials and Chebyshev nodes to analytically find extremums.
+### Method 2: Johann Hudde's Method with Arithmetic Progressions
+A 17th century method by Johann Hudde (mathematician and mayor of Amsterdam) that identifies multiple roots by multiplying polynomial coefficients by arithmetic progressions.
 
 ## Key Features
 
 - **Derivative-free**: No gradient computation required
-- **Numerically stable**: Robust convergence properties
-- **Practical**: Tested on polynomials up to degree 8
-- **Applications**: Useful for noisy data and discrete functions
+- **Historical significance**: Includes both modern (2024) and classical (17th century) approaches  
+- **Mathematical rigor**: Complete proofs and theoretical foundations
+- **Practical examples**: Multiple worked examples with varying complexity
+
+## Examples Include
+
+- Simple cases: $f(x) = x^2 \cdot (6 - 2x)$ and $f(x) = x^{10}(5-x)$ 
+- Complex cases: $f(x) = x(x+1)(2-x)$ and rational functions
+- Tangent finding and multiple root identification
 
 ## Compilation
 
-To compile the LaTeX documents:
+To compile the English LaTeX document:
 
 ```bash
-pdflatex powder_2_tricks_ru.tex
-pdflatex powder_2_tricks_en.tex
+xelatex powder_2_tricks_en.tex
+```
+
+The Russian original requires biber for bibliography:
+```bash
+xelatex polynomial_optimization_wo_derivatives_ru.tex
+biber polynomial_optimization_wo_derivatives_ru
+xelatex polynomial_optimization_wo_derivatives_ru.tex
 ```
 
 ## Author
