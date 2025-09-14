@@ -46,7 +46,7 @@ xelatex polynomial_optimization_wo_derivatives_ru.tex
 
 ## Author
 
-B. Demeshev
+Boris Demeshev
 
 ## License
 
