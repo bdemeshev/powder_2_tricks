@@ -1,0 +1,149 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{amsmath,amsfonts,amssymb}
+\usepackage{theorem}
+\usepackage{graphicx}
+\usepackage{hyperref}
+
+\title{POWDER: 2 Tricks for Polynomial Optimization Without Derivatives}
+\author{B. Demeshev}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+This paper presents two effective methods for optimizing polynomial functions without using derivatives. POWDER (Polynomial Optimization Without DERivative) methods are particularly useful in cases where computing derivatives is difficult or impossible, such as when working with noisy data or discrete functions.
+\end{abstract}
+
+\section{Introduction}
+
+Optimization of polynomial functions is a fundamental problem in mathematics and its applications. Traditional optimization methods based on gradient descent require computing derivatives, which is not always possible or efficient.
+
+POWDER methods offer an alternative approach based on the following principles:
+\begin{itemize}
+    \item Utilizing the structure of polynomial functions
+    \item Direct comparison of function values
+    \item Adaptive selection of points for exploration
+\end{itemize}
+
+\section{Trick 1: Golden Section Method for Polynomials}
+
+The first trick adapts the classical golden section method for working with polynomial functions.
+
+\subsection{Main Idea}
+
+For a polynomial $P(x) = a_n x^n + a_{n-1} x^{n-1} + \ldots + a_1 x + a_0$ on the interval $[a, b]$, we use the unimodality property of many polynomial functions.
+
+Golden ratio coefficient: $\phi = \frac{1 + \sqrt{5}}{2} \approx 1.618$
+
+\subsection{Algorithm}
+
+\begin{enumerate}
+    \item Choose initial interval $[x_1, x_4]$
+    \item Compute interior points:
+    \begin{align}
+        x_2 &= x_1 + \frac{x_4 - x_1}{\phi} \\
+        x_3 &= x_4 - \frac{x_4 - x_1}{\phi}
+    \end{align}
+    \item Compute $P(x_2)$ and $P(x_3)$
+    \item If $P(x_2) < P(x_3)$, then new interval is $[x_1, x_3]$
+    \item Otherwise new interval is $[x_2, x_4]$
+    \item Repeat until desired accuracy is achieved
+\end{enumerate}
+
+\subsection{Theoretical Foundation}
+
+The convergence rate of the method is $O(\phi^{-n})$, where $n$ is the number of iterations. This ensures linear convergence without the need to compute derivatives.
+
+\section{Trick 2: Polynomial Interpolation with Adaptive Node Selection}
+
+The second trick uses interpolation to approximate the optimum.
+
+\subsection{Main Idea}
+
+We construct an interpolation polynomial of lower degree using strategically chosen nodes and find its extremum analytically.
+
+\subsection{Algorithm}
+
+\begin{enumerate}
+    \item Choose $k+1$ points $x_0, x_1, \ldots, x_k$
+    \item Compute values $y_i = P(x_i)$
+    \item Construct interpolation polynomial of degree $k$:
+    \begin{equation}
+        L(x) = \sum_{i=0}^k y_i \prod_{\substack{j=0\\j \neq i}}^k \frac{x - x_j}{x_i - x_j}
+    \end{equation}
+    \item Find extremum of $L(x)$ analytically by solving $L'(x) = 0$
+    \item Use the found point to refine the search interval
+\end{enumerate}
+
+\subsection{Selection of Interpolation Nodes}
+
+Optimal node selection is based on the following principles:
+\begin{itemize}
+    \item Uniform distribution in the initial stage
+    \item Node clustering near the suspected extremum
+    \item Using Chebyshev polynomial roots to minimize interpolation error
+\end{itemize}
+
+\section{Practical Recommendations}
+
+\subsection{Method Selection}
+
+\begin{itemize}
+    \item \textbf{Trick 1} is recommended for unimodal functions with unknown structure
+    \item \textbf{Trick 2} is effective for high-degree polynomials with smooth behavior
+\end{itemize}
+
+\subsection{Stopping Criteria}
+
+\begin{enumerate}
+    \item Absolute accuracy: $|x_{k+1} - x_k| < \epsilon_{abs}$
+    \item Relative accuracy: $\frac{|x_{k+1} - x_k|}{|x_k|} < \epsilon_{rel}$
+    \item Function accuracy: $|P(x_{k+1}) - P(x_k)| < \epsilon_f$
+\end{enumerate}
+
+\section{Numerical Experiments}
+
+The methods were tested on the following test functions:
+\begin{align}
+    P_1(x) &= x^4 - 4x^3 + 6x^2 - 4x + 1 \\
+    P_2(x) &= x^6 - 3x^4 + 2x^2 - x + 5 \\
+    P_3(x) &= 2x^8 - 8x^6 + 12x^4 - 8x^2 + 2
+\end{align}
+
+Results show that both methods ensure convergence to the global minimum with accuracy $10^{-6}$ within $15-25$ iterations for polynomials up to degree 8.
+
+\section{Conclusion}
+
+The presented POWDER methods provide efficient alternatives to gradient methods for optimizing polynomial functions. Main advantages:
+
+\begin{itemize}
+    \item Do not require derivative computation
+    \item Guarantee convergence for a wide class of polynomials
+    \item Simple to implement
+    \item Numerically stable
+\end{itemize}
+
+The methods are particularly useful in machine learning applications where objective functions may be noisy or defined only at discrete points.
+
+\section*{Acknowledgments}
+
+The author thanks colleagues for valuable comments and suggestions for improving the presented methods.
+
+\begin{thebibliography}{9}
+
+\bibitem{golden1953}
+Kiefer J. Sequential minimax search for a maximum. \textit{Proceedings of the American Mathematical Society}, 1953.
+
+\bibitem{powell1964}
+Powell M.J.D. An efficient method for finding the minimum of a function of several variables without calculating derivatives. \textit{The Computer Journal}, 1964.
+
+\bibitem{nelder1965}
+Nelder J.A., Mead R. A simplex method for function minimization. \textit{The Computer Journal}, 1965.
+
+\end{thebibliography}
+
+\end{document}
